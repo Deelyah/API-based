@@ -1,43 +1,43 @@
-<template>
-  <section>
-    <div
-      class="main__container s:mt-4 s:flex-col s:justify-center s:items-center"
-    >
-    <section>
-      <h1 class="w-full text-xl font-semibold s:w-full">Be What You want</h1>
+<!--eslint-disable-->
 
-      <section class="w-full my-4 sort__section">
-          <label for="sort_todolists" class="mr-6 s:text-base">Sort By</label>
-          <select
-            name="sort"
-            id="sort_todolists"
-            class="cursor-pointer outline focus:outline-none"
-          >
-          </select>
-          <button class="px-2 ml-8 text-xl font-extrabold border border-black rounded-full cursor-pointer hover:shadow-2xl">Edit</button>
-          <button class="px-2 ml-8 text-xl font-extrabold border border-black rounded-full cursor-pointer hover:shadow-2xl">Delete</button>
-        </section>
+<template>
+  <!--eslint-disable-->
+  <div class="mt-4 px-4">
+
+
+    <section class="rounded-lg mt-3 list__container border overflow-hidden">
+      <div>
+        <ul>
+          <todolist
+            v-for="Todo in Todos"
+            :key="Todo.id"
+            :id="Todo.id"
+            :title="Todo.title"
+            :iconId="Todo.iconId"
+            :createdAt="Todo.createdAt"
+          ></todolist>
+        </ul>
+      </div>
     </section>
-    </div>
-  </section>
+  </div>
 </template>
 
 <script>
 /* eslint-disable */
+import todolist from "./todolist.vue";
 export default {
-  name: 'Todos',
-  data() {
-    return {
-      
+  name: "Todo",
+
+  components: { todolist },
+
+  computed: {
+    Todos() {
+      return this.$store.getters.returnTodoList;
     }
+  },
+  created() {
+    this.$store.dispatch("getTodoList");
   }
-}
+};
 </script>
 
-<style scoped>
-@import url(https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;800;900&display=swap);
-
-h1 {
-  font-family: "Montserrat", sans-serif;
-}
-</style>
