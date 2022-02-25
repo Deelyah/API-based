@@ -2,7 +2,7 @@
 <template>
   <div class="px-4">
     <div class="nav_container flex sm:items-center pt-6 pb-6">
-      <h1 class="mr-auto">Sopuluchukwu</h1>
+      <h1 class="mr-auto"><router-link to="/">Sopuluchukwu</router-link></h1>
       <div class="hidden sm:flex border overflow:hidden p-3 rounded-lg">
         <img src="../assets/search.svg" width="20" height="20" alt="Search" />
         <input placeholder="Search" class="focus:outline-none ml-3" type="search" name="" id="" />

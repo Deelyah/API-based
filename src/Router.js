@@ -15,7 +15,7 @@ const router = new VueRouter({
     { path: "/Todos", component: Todos },
     {path: "/Create", component:createTodo},
     {path: "/edit/:id", component: editList},
-    {path: "/:any", component: todoItems}
+    {path: "/Todos/:any", component: todoItems}
 
   ]
 });

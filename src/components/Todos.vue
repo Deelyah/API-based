@@ -1,9 +1,5 @@
-<!--eslint-disable-->
-
 <template>
-  <!--eslint-disable-->
   <div class="mt-4 px-4">
-
 
     <section class="rounded-lg mt-3 list__container border overflow-hidden">
       <div>
@@ -35,8 +31,8 @@ export default {
       return this.$store.getters.returnTodoList;
     }
   },
-  created() {
-    this.$store.dispatch("getTodoList");
+  async created() {
+    await this.$store.dispatch("getTodoList");
   }
 };
 </script>

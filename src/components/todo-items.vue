@@ -1,16 +1,18 @@
 <template>
-<div>
-
-   <section class="w-full px-4">
-      <div class="pt-4 pr-3 flex justify-end sm:items-end">
-        <h4 class="font-semibold text-lg text-black mr-auto hover:border-b-3">
-          <router-link to="/Todos"
-            ><span class="todo">Todo Lists</span>/{{ title }}</router-link
-          >
+  <div>
+    <section class="w-full px-4">
+      <!-- <div class="pt-4 pr-3 flex justify-end sm:items-end">
+        <h4
+          class="font-semibold text-lg text-black mr-auto hover:border-b-3 flex flex-col items-start"
+        >
+          <router-link to="/Todos" class="underline text-blue-500">
+            <span class="todo">Todo Lists</span>
+          </router-link>
+          <span class="text-md text-gray-400">/{{ matchingTitle }}</span>
         </h4>
 
         <div class="flex items-center sm:hidden">
-          <router-link :to="itemId">
+          <router-link :to="`edit/${this.$route.params.any}`">
             <img
               class="hover:cursor-pointer mr-3.5"
               src="../assets/sort.svg"
@@ -35,65 +37,92 @@
             />
           </router-link>
         </div>
+      </div> -->
+    </section>
 
+    <section class="mt-4">
+      <div class="rounded-lg mt-3 list__container border overflow-hidden ">
+        <ul>
+          <list-item
+            v-for="(items, index) in currentTodoListItems"
+            :todo="items"
+            :key="index"
+            @change="handleCheck($event, index)"
+            ref="list"
+          />
+        </ul>
       </div>
     </section>
-  
-  <section class="mt-4 px-4">
-    <div class="rounded-lg mt-3 list__container border overflow-hidden ">
-      <ul>
-        <li v-for="Todo in currentTodo" :key="Todo.id">
-          <a class="flex p-3 pr-3">
-            <input class="mt-2" type="checkbox"/>
-            <div class="ml-6 w-full flex flex-col justify-start">
-              <div class="flex-col justify-center items-center w-full">
-                <p class="font-medium">{{ Todo.title }}</p>
-                <p class="font-base mr-auto">{{ Todo.createdAt }}</p>
-              </div>
-            </div>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </section>
-</div>
+  </div>
 </template>
 
 <script>
 /* eslint-disable */
+import listItem from "./single-item.vue";
+
 export default {
+  components: {
+    listItem
+  },
   data() {
     return {
-      currentTodo: [],
-      itemId: '',
+      currentTodo: null,
+      currentTodoListItems: [],
+      interval: 0
     };
   },
 
   computed: {
-
-    title() {
-      this.$store.dispatch("getCurrentTodo", this.$route.params.any);
-      let matchingTodo = this.$store.getters.returnCurrentTodo.title;
-      if (matchingTodo.length > 22) {
-        return matchingTodo
-          .split("")
-          .splice(0, 22)
-          .join("")
-          .concat("...");
+    matchingTitle() {
+      if (this.currentTodo && this.currentTodo.title) {
+        let title = this.currentTodo.title;
+        if (title.length > 22) {
+          return title
+            .split("")
+            .splice(0, 22)
+            .join("")
+            .concat("...");
+        } else {
+          return title;
+        }
       } else {
-        return matchingTodo;
+        return "";
       }
     }
   },
 
+  methods: {
+    async handleCheck({ id, isChecked }) {
+      try {
+        if (isChecked) {
+          await this.$store.dispatch("toggleStatus", {
+            payload: { status: "PENDING" },
+            id: this.$route.params.any,
+            todoId: id
+          });
+        } else {
+          await this.$store.dispatch("toggleStatus", {
+            payload: { status: "COMPLETED" },
+            id: this.$route.params.any,
+            todoId: id
+          });
+        }
+        await this.getListItems();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getListItems() {
+      await this.$store.dispatch("getCurrentTodo", this.$route.params.any);
+      this.currentTodoListItems = this.$store.getters.returnCurrentTodo.todolist;
+      this.currentTodo = this.$store.getters.returnCurrentTodo;
+    }
+  },
+
   async created() {
-    let routeId = this.$route.params.any;
-   await this.$store.dispatch(
-      "getCurrentTodoListItems",
-      routeId
-    );
-    this.currentTodo = this.$store.getters.returnCurrentTodoListItems;
-    this.itemId = `edit/${routeId}`
+    await this.getListItems();
+  },
+  mounted() {
   }
 };
 </script>
@@ -105,15 +134,7 @@ export default {
   }
 
   .list__container {
-    background-color: #f9f9f9;
-  }
-
-  li {
-    border-bottom: 1px solid #e7e7e7;
-  }
-
-  p {
-    font-size: 14px;
+    background-color: white;
   }
 
   button {

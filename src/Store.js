@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from 'axios'
+import axios from "axios";
 
 Vue.use(Vuex);
 
@@ -9,7 +9,7 @@ const store = new Vuex.Store({
   state() {
     return {
       listOfTodos: [],
-      currentTodo: [],
+      currentTodo: null,
       currentTodoListItems: []
     };
   },
@@ -25,6 +25,10 @@ const store = new Vuex.Store({
 
     setCurrentTodoListItems(state, payload) {
       state.currentTodoListItems = payload;
+    },
+
+    updateCurrentTodo(state, payload) {
+      state.currentTodo.todolist = state.currentTodo.todolist.concat(payload);
     }
   },
 
@@ -54,9 +58,60 @@ const store = new Vuex.Store({
     },
 
     async createNewTodo(_, payload) {
-      console.log(payload)
+      console.log(payload);
       try {
-        await axios.post("https://printful-api.herokuapp.com/todos", payload)
+        await axios.post("https://printful-api.herokuapp.com/todos", payload);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async updateTodoItems(_, { payload, todoId, id }) {
+      console.log(payload);
+      try {
+        const res = await axios.patch(
+          `https://printful-api.herokuapp.com/todos/${todoId}/todolists/${id}/title`,
+          payload
+        );
+        return res;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async deleteTodoItems(_, { payload, todoId, id }) {
+      console.log(payload);
+      try {
+        const res = await axios.delete(
+          `https://printful-api.herokuapp.com/todos/${todoId}/todolists/${id}`,
+          payload
+        );
+        return res;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async createNewTodoListItem(_, { payload, id }) {
+      console.log(payload);
+      try {
+        const res = await axios.post(
+          `https://printful-api.herokuapp.com/todos/${id}/todolists`,
+          payload
+        );
+        return res;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async toggleStatus(_, { payload, id, todoId }) {
+      try {
+        const res = await axios.patch(
+          `https://printful-api.herokuapp.com/todos/${id}/todolists/${todoId.toString()}`,
+          payload
+        );
+        return res;
       } catch (error) {
         console.log(error);
       }
