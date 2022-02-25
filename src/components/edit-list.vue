@@ -55,7 +55,6 @@
 
     <!-- Save changes button -->
     <button
-      @click="handleSave()"
       class="primary_button mt-12 w-full px-4 py-2 text-base rounded-md text-white font-semibold"
     >
       Save Changes
@@ -187,14 +186,18 @@ export default {
             );
           })
           .then(val => {
-            console.log("Passed modal")
+            this.$store.commit("setNotification", {
+              message: "Todolist successfully updated",
+              type: "success"
+            });
+            console.log("Passed modal");
             this.$router.push(`/Todos/${this.$route.params.id}`);
           });
       } catch (error) {
         console.log(error);
         reject(error);
       }
-    },
+    }
   },
 
   async created() {
@@ -208,7 +211,7 @@ export default {
 <style scoped>
 @media screen and (min-width: 0) {
   .main_container {
-    background-color: #e7e7e7;
+    background-color: #f2f2f2;
   }
 
   h4 {

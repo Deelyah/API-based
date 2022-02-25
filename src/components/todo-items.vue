@@ -47,7 +47,7 @@
             v-for="(items, index) in currentTodoListItems"
             :todo="items"
             :key="index"
-            @change="handleCheck($event, index)"
+            @send-id="handleCheck($event, index)"
             ref="list"
           />
         </ul>

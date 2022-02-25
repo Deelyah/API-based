@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full" @click="routeAway">
+  <div class="w-full">
     <li :class="[`todo${todo.id}`]">
       <a class="flex p-6 pr-3">
         <input
@@ -37,7 +37,7 @@ export default {
   methods: {
     toggleStatus(e, id) {
       e.preventDefault();
-      this.$emit("change", { id, isChecked: this.isChecked });
+      this.$emit("send-id", { id, isChecked: this.isChecked });
     }, 
     routeAway() {
       this.$router.push(`/edit/${this.todo.id}`)

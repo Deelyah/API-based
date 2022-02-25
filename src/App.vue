@@ -1,6 +1,6 @@
 <!-- eslint disable -->
 <template>
-  <div id="app" class="main_app" @pop-info="toggleModal">
+  <div id="app" class="main_app">
     <nav-bar class="mb-8"></nav-bar>
 
     <section class="w-full px-4">
@@ -8,6 +8,7 @@
         <h4
           v-if="$route.path == '/Todos'"
           class="font-bold text-2xl text-gray-700 text-black mr-auto hover:border-b-3"
+          @click="sendme"
         >
           <router-link class="todo" to="/Todos">Todo List</router-link>
         </h4>
@@ -74,9 +75,18 @@
     <router-view class="router-here p-4 pt-0"></router-view>
     <!-- <todos/> -->
 
-    <section class="w-full fixed">
-      <div :class="['w-full py-4 px-8 md:w-1/2 rounded-md']">
-        {{ getMessage }}
+    <section class="notif_bar w-full fixed justify-center items-center">
+      <div
+        :class="[
+          'w-full py-4 px-8 md:w-1/2 font-bold text-lg text-white sm:text-xl',
+          getMessage && getMessage.type
+            ? getMessage.type === 'success'
+              ? 'bg-green-500'
+              : 'bg-red-500'
+            : 'green'
+        ]"
+      >
+        {{ getMessage && getMessage.message ? getMessage.message : "" }}
       </div>
     </section>
   </div>
@@ -112,12 +122,15 @@ export default {
     },
     toggleModal() {
       alert("modal working!!!!");
+    },
+    sendme() {
+      this.$emit("send");
     }
   },
 
   computed: {
     getMessage() {
-      return this.message;
+      return this.$store.getters.getNotification;
     },
     confirmDisplay() {
       const todoItemsLink = `edit/${this.$route.params.any}`;
@@ -230,6 +243,11 @@ body {
     top: 40px;
     right: 0px;
     min-width: 250px;
+  }
+
+  .notif_bar {
+    bottom: 0;
+    z-index: 4000;
   }
 }
 </style>

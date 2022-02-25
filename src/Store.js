@@ -8,6 +8,10 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state() {
     return {
+      notification: {
+        message: "Successful",
+        type: "success"
+      },
       listOfTodos: [],
       currentTodo: null,
       currentTodoListItems: []
@@ -29,6 +33,10 @@ const store = new Vuex.Store({
 
     updateCurrentTodo(state, payload) {
       state.currentTodo.todolist = state.currentTodo.todolist.concat(payload);
+    },
+
+    setNotification(state, payload) {
+      state.notification = payload;
     }
   },
 
@@ -129,6 +137,10 @@ const store = new Vuex.Store({
 
     returnCurrentTodoListItems(state) {
       return state.currentTodoListItems;
+    },
+
+    getNotification(state) {
+      return state.notification;
     }
   }
 });
